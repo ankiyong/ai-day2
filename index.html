@@ -150,6 +150,18 @@ pre[lang="en"]{word-break:normal}
   width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--paper);font-size:12px;font-weight:700;
 }
 .intro-h{font-size:17px;margin:28px 0 10px;letter-spacing:-0.01em}
+.dl{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:16px 0 0;padding:16px 18px 16px 20px;
+  border-radius:12px;background:var(--accent);color:var(--paper);text-decoration:none;
+  box-shadow:0 8px 22px var(--shadow);
+}
+.dl:hover{filter:brightness(1.08)}
+.dl:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.dl > svg{width:30px;height:30px;flex:none}
+.dl-text{flex:1 1 13em;min-width:0}
+.dl-main{display:block;font-size:18px;font-weight:700;line-height:1.35}
+.dl-sub{display:block;font-size:14px;line-height:1.45;opacity:.92}
+.dl-go{flex:none;font-size:15px;font-weight:700;background:var(--paper);color:var(--accent);border-radius:999px;padding:7px 18px}
 .report{margin:24px 0 0}
 .report figcaption{font-size:14px;font-weight:700}
 .report blockquote{
@@ -293,7 +305,15 @@ const POSTER_INTRO = `
       <tr><th scope="row">전달 목적</th><td>무엇을 알리거나 이해시키려는가?</td><td>업무 안내자료 통합 방안 설명</td></tr>
     </tbody>
   </table></div>
-  <p class="tip">보고서 파일이 제대로 읽히는지 먼저 확인하세요. 읽히지 않으면 PDF로 다시 첨부하거나 필요한 본문을 붙여 넣으면 됩니다.</p>
+  <a class="dl" href="assets/krw-usd-outlook.hwpx" download="원·달러 환율 동향 및 전망.hwpx">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></svg>
+    <span class="dl-text">
+      <span class="dl-main">실습용 보고서 내려받기</span>
+      <span class="dl-sub">원·달러 환율 동향 및 전망 · 한글 파일(HWPX) · 65KB</span>
+    </span>
+    <span class="dl-go">다운로드</span>
+  </a>
+  <p class="tip">내 보고서가 없으면 이 파일을 받아 1단계에서 첨부하세요. 보고서 파일이 제대로 읽히는지 먼저 확인하세요. 읽히지 않으면 PDF로 다시 첨부하거나 필요한 본문을 붙여 넣으면 됩니다.</p>
   <figure class="report">
     <figcaption><span class="lbl">공통 예시</span>수업용 가상 보고서</figcaption>
     <blockquote>신규 청년인턴의 업무 안내가 이메일·공유폴더·구두 설명에 나뉘어 있다. 출퇴근·복무 절차, 업무자료 위치, 문의 창구를 한 안내문에 모아 제공하는 방안을 검토한다. 다음 기수 적용 여부는 내부 검토를 거쳐 결정한다.</blockquote>
