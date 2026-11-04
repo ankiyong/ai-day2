@@ -13,8 +13,10 @@
 :root{
   --bg:#EDF0F5;--paper:#FFFFFF;--ink:#1A2132;--muted:#5B6477;--line:#D5DAE3;
   --card:#2C55D6;--card-soft:#E3EAFC;--video:#B8306F;--video-soft:#F8E2EC;
+  --poster:#0F7B6C;--poster-soft:#DCF1EC;
   --fill:#FFF1B8;--fill-ink:#6A5200;
   --lock:#5D6880;--lock-soft:#E3E7EE;
+  --mp-bg:#FFFFFF;--mp-ink:#1B2A4A;--mp-accent:#E8590C;--mp-line:#D9DEE8;
   --bar-bg:#1A2132;--bar-ink:#FFFFFF;--bar-muted:#A9B2C4;--bar-line:#3B4660;--bar-alert:#FFCF6E;
   --shadow:rgba(16,22,38,.18);
   --accent:var(--card);--accent-soft:var(--card-soft);
@@ -27,6 +29,7 @@
   :root:not([data-theme="light"]){
     --bg:#121722;--paper:#1B2231;--ink:#E7EBF3;--muted:#9AA3B5;--line:#2E3748;
     --card:#7D9BFF;--card-soft:#22305A;--video:#F07AAE;--video-soft:#4A2034;
+    --poster:#4FD1B8;--poster-soft:#163A35;
     --fill:#4A3E10;--fill-ink:#FFE07A;
     --lock:#8F99AE;--lock-soft:#242B3A;
     --bar-bg:#283146;--bar-ink:#EEF1F7;--bar-muted:#A3ACBE;--bar-line:#435069;
@@ -37,6 +40,7 @@
 :root[data-theme="dark"]{
   --bg:#121722;--paper:#1B2231;--ink:#E7EBF3;--muted:#9AA3B5;--line:#2E3748;
   --card:#7D9BFF;--card-soft:#22305A;--video:#F07AAE;--video-soft:#4A2034;
+  --poster:#4FD1B8;--poster-soft:#163A35;
   --fill:#4A3E10;--fill-ink:#FFE07A;
   --lock:#8F99AE;--lock-soft:#242B3A;
   --bar-bg:#283146;--bar-ink:#EEF1F7;--bar-muted:#A3ACBE;--bar-line:#435069;
@@ -51,6 +55,7 @@ body{
   word-break:keep-all;overflow-wrap:anywhere;
 }
 body[data-tab="video"]{--accent:var(--video);--accent-soft:var(--video-soft)}
+body[data-tab="poster"]{--accent:var(--poster);--accent-soft:var(--poster-soft)}
 [hidden]{display:none!important}
 .wrap{max-width:760px;margin:0 auto;padding:48px 20px 80px}
 header h1{font-size:clamp(28px,6vw,40px);line-height:1.2;margin:0 0 8px;font-weight:700;letter-spacing:-0.02em;text-wrap:balance}
@@ -129,6 +134,77 @@ pre[lang="en"]{word-break:normal}
   background:var(--paper);color:var(--muted);font-size:14px;
 }
 
+/* 포스터 탭: 할 일 → 프롬프트 → 결과 예시 → 확인할 점 → 결과물 */
+.lbl{font-size:12.5px;font-weight:700;letter-spacing:.04em;color:var(--accent);margin-right:8px}
+.intro{margin:0 0 44px}
+.goal{margin:0;font-size:16px}
+.goal .lbl{display:block;margin-bottom:2px}
+.flow{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px;counter-reset:f}
+.flow li{
+  counter-increment:f;display:inline-flex;align-items:center;gap:6px;
+  font-size:14px;font-weight:500;background:var(--paper);
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 5px;
+}
+.flow li::before{
+  content:counter(f);display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--paper);font-size:12px;font-weight:700;
+}
+.intro-h{font-size:17px;margin:28px 0 10px;letter-spacing:-0.01em}
+.report{margin:24px 0 0}
+.report figcaption{font-size:14px;font-weight:700}
+.report blockquote{
+  margin:8px 0 0;padding:14px 18px;background:var(--paper);
+  border:1px solid var(--line);border-radius:8px;font-size:15px;line-height:1.75;
+}
+.report p{margin:8px 0 0;font-size:14px;color:var(--muted)}
+
+.todo{margin:0 0 16px;font-size:15.5px}
+.ex{margin:16px 0 0;padding:16px 18px;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.ex > .lbl{display:block;margin:0 0 10px}
+.ex-cap{margin:10px 0 0;font-size:13px;color:var(--muted)}
+.tbl{overflow-x:auto}
+.tbl table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.55}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{padding-left:0}
+.tbl thead th{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.tbl tbody th{font-weight:700;min-width:6.5em}
+.tbl tbody tr:last-child > *{border-bottom:0}
+.chip{display:inline-block;font-size:12.5px;font-weight:500;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.chip.fact{background:var(--card-soft);color:var(--ink)}
+.chip.review{background:var(--fill);color:var(--fill-ink)}
+.chip.open{background:var(--lock-soft);color:var(--muted)}
+.accent-word{color:var(--mp-accent);font-weight:700}
+.script{margin:0;display:grid;gap:10px}
+.script > div{display:grid;grid-template-columns:5.5em 1fr;gap:2px 12px;align-items:baseline}
+.script dt{font-size:13px;font-weight:700;color:var(--muted)}
+.script dd{margin:0;min-width:0}
+.script-title{font-size:18px;font-weight:700;letter-spacing:-0.01em}
+.ex-split{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:flex-start}
+.ex-side{flex:1 1 220px;min-width:0;font-size:14.5px}
+.ex-side p{margin:0}
+.ex-side ul{margin:8px 0 0;padding-left:18px}
+.ex-side li{margin:2px 0}
+.mini-poster{
+  flex:none;width:236px;max-width:100%;aspect-ratio:1/1.414;
+  background:var(--mp-bg);color:var(--mp-ink);border:1px solid var(--mp-line);
+  box-shadow:0 6px 18px var(--shadow);padding:18px 16px 10px;
+  display:flex;flex-direction:column;gap:12px;font-size:10.5px;line-height:1.45;word-break:keep-all;
+}
+.mp-title{margin:0;font-size:19px;font-weight:700;line-height:1.25;letter-spacing:-0.02em}
+.mp-title em{font-style:normal;color:var(--mp-accent)}
+.mp-sub{margin:5px 0 0;font-size:11px}
+.mp-mid{flex:1;display:grid;gap:9px;align-content:start}
+.mp-box{border-top:2px solid var(--mp-ink);padding-top:5px}
+.mp-box b{display:block;font-size:11.5px;margin-bottom:1px}
+.mp-foot{font-size:9px;border-top:1px solid var(--mp-line);padding-top:6px}
+.check{margin:16px 0 0;padding:12px 16px;border-radius:8px;background:var(--accent-soft)}
+.check p{margin:0}
+.check .lbl{display:flex;align-items:center;gap:5px;margin:0 0 2px}
+.check .lbl svg{width:15px;height:15px}
+.check-note{margin-top:6px!important;font-size:14px;color:var(--muted)}
+.output{margin:12px 0 0;font-size:14px;color:var(--muted)}
+.output .lbl{color:var(--muted)}
+
 footer{
   color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px;margin-top:16px;
   display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;
@@ -200,6 +276,99 @@ const firebaseConfig = {
 
 /* 화면 구조(제목만). 프롬프트 글은 여기에 없다. */
 const FOOTER = 'AI로 만든 콘텐츠를 올릴 때는 AI 활용 사실을 함께 표기하세요.';
+
+/* 포스터 탭의 설명·결과 예시(프롬프트 글은 Firebase에 있다) */
+const POSTER_INTRO = `
+<div class="intro">
+  <p class="goal"><span class="lbl">실습 목표</span>작성된 보고서에서 중요한 내용을 골라, 읽는 사람이 핵심을 빠르게 파악할 수 있는 <strong>세로형 포스터 한 장</strong>을 만듭니다.</p>
+  <ol class="flow" aria-label="전체 다섯 단계">
+    <li>핵심 정리</li><li>원고 확정</li><li>디자인 설계</li><li>이미지 제작</li><li>검수·수정</li>
+  </ol>
+  <h3 class="intro-h">시작 전에 세 가지 준비</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>준비 항목</th><th>정할 내용</th><th>예시</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">보고서 파일</th><td>포스터의 근거가 될 완성된 보고서</td><td>청년인턴 업무 안내 개선 보고서</td></tr>
+      <tr><th scope="row">전달 대상</th><td>누가 이 포스터를 보는가?</td><td>기관 내부 담당자</td></tr>
+      <tr><th scope="row">전달 목적</th><td>무엇을 알리거나 이해시키려는가?</td><td>업무 안내자료 통합 방안 설명</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tip">보고서 파일이 제대로 읽히는지 먼저 확인하세요. 읽히지 않으면 PDF로 다시 첨부하거나 필요한 본문을 붙여 넣으면 됩니다.</p>
+  <figure class="report">
+    <figcaption><span class="lbl">공통 예시</span>수업용 가상 보고서</figcaption>
+    <blockquote>신규 청년인턴의 업무 안내가 이메일·공유폴더·구두 설명에 나뉘어 있다. 출퇴근·복무 절차, 업무자료 위치, 문의 창구를 한 안내문에 모아 제공하는 방안을 검토한다. 다음 기수 적용 여부는 내부 검토를 거쳐 결정한다.</blockquote>
+    <p>아래 다섯 단계에서 이 보고서가 포스터로 바뀌는 과정을 따라가 보세요.</p>
+  </figure>
+</div>`;
+
+const POSTER_EX1 = `
+<div class="tbl"><table>
+  <thead><tr><th>핵심 내용</th><th>내용의 상태</th></tr></thead>
+  <tbody>
+    <tr><td>업무 안내가 이메일·공유폴더·구두 설명에 분산되어 있음</td><td><span class="chip fact">보고서에 서술된 현황</span></td></tr>
+    <tr><td>출퇴근·복무, 자료 위치, 문의 창구를 한 안내문에 모으는 방안</td><td><span class="chip review">검토 중인 방안</span></td></tr>
+    <tr><td>다음 기수 적용 여부를 내부 검토 후 결정</td><td><span class="chip open">미확정 사항</span></td></tr>
+  </tbody>
+</table></div>
+<p class="ex-cap">가상 보고서를 정리한 예시입니다. 실제 실습에서는 원문 위치도 함께 표시합니다.</p>`;
+
+const POSTER_EX2 = `
+<dl class="script">
+  <div><dt>제목</dt><dd class="script-title">청년인턴 업무 안내, 한곳에</dd></div>
+  <div><dt>설명</dt><dd>다음 기수 안내자료 통합 검토안</dd></div>
+  <div><dt>핵심 내용</dt><dd><div class="tbl"><table><tbody>
+    <tr><th scope="row">현재 안내 방식</th><td>이메일·공유폴더·구두 설명으로 안내가 나뉘어 있습니다.</td></tr>
+    <tr><th scope="row">모을 정보</th><td>출퇴근·복무 절차, 업무자료 위치, 문의 창구를 한 안내문에 담는 방안입니다.</td></tr>
+    <tr><th scope="row">적용 여부</th><td>내부 검토를 거쳐 다음 기수 적용 여부를 결정합니다.</td></tr>
+  </tbody></table></div></dd></div>
+  <div><dt>하단 출처</dt><dd>수업용 가상 보고서</dd></div>
+</dl>`;
+
+const POSTER_EX3 = `
+<div class="tbl"><table>
+  <thead><tr><th>영역</th><th>배치할 내용</th><th>표현 방식</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">상단</th><td>제목과 설명</td><td>제목을 가장 크게 배치</td></tr>
+    <tr><th scope="row">중앙</th><td>현재 안내 방식 · 모을 정보 · 적용 여부</td><td>세 구역으로 나누고 짧은 문장 사용</td></tr>
+    <tr><th scope="row">하단</th><td>출처</td><td>본문보다 작되 읽을 수 있게 배치</td></tr>
+    <tr><th scope="row">강조 지점</th><td>제목의 ‘<span class="accent-word">한곳에</span>’</td><td>주황색으로 강조</td></tr>
+  </tbody>
+</table></div>`;
+
+const POSTER_EX4 = `
+<div class="ex-split">
+  <div class="mini-poster" role="img" aria-label="포스터 초안 예시. 제목 ‘청년인턴 업무 안내, 한곳에’, 중앙에 세 구역, 하단에 출처.">
+    <div><p class="mp-title">청년인턴 업무 안내, <em>한곳에</em></p><p class="mp-sub">다음 기수 안내자료 통합 검토안</p></div>
+    <div class="mp-mid">
+      <div class="mp-box"><b>현재 안내 방식</b>이메일·공유폴더·구두 설명으로 안내가 나뉘어 있습니다.</div>
+      <div class="mp-box"><b>모을 정보</b>출퇴근·복무 절차, 업무자료 위치, 문의 창구를 한 안내문에 담는 방안입니다.</div>
+      <div class="mp-box"><b>적용 여부</b>내부 검토를 거쳐 다음 기수 적용 여부를 결정합니다.</div>
+    </div>
+    <div class="mp-foot">출처: 수업용 가상 보고서</div>
+  </div>
+  <div class="ex-side">
+    <p>앞 단계에서 정한 요소가 이미지 한 장으로 만들어집니다.</p>
+    <ul>
+      <li><b>상단</b> ‘청년인턴 업무 안내, 한곳에’라는 큰 제목</li>
+      <li><b>중앙</b> 현재 안내 방식 → 모을 정보 → 적용 여부의 세 구역</li>
+      <li><b>하단</b> ‘수업용 가상 보고서’라는 출처</li>
+      <li><b>색상</b> 흰색 배경 · 남색 글자 · 주황색 강조</li>
+    </ul>
+    <p class="ex-cap">배치를 보여 주기 위한 예시 그림입니다(A4 세로 비율).</p>
+  </div>
+</div>`;
+
+const POSTER_EX5 = `
+<div class="tbl"><table>
+  <thead><tr><th>확인 항목</th><th>확인할 내용</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">내용</th><td>보고서에 없는 주장이나 정보가 들어갔는가?</td></tr>
+    <tr><th scope="row">상태</th><td>제안·검토·계획이 확정된 사실로 바뀌었는가?</td></tr>
+    <tr><th scope="row">정확성</th><td>숫자·날짜·기관명·출처가 원문과 같은가?</td></tr>
+    <tr><th scope="row">가독성</th><td>글자가 너무 작거나 잘리고 겹친 부분이 있는가?</td></tr>
+  </tbody>
+</table></div>
+<p class="ex-cap">수정한 이미지도 같은 기준으로 확인한 뒤 저장합니다.</p>`;
 const TABS = [
   { id: 'card', label: '카드뉴스 제작',
     note: '처음부터 끝까지 **같은 채팅방에서 이어서** 진행하세요. 그래야 “위 자료”, “위에서 정한”이 통합니다.',
@@ -227,11 +396,50 @@ const TABS = [
         { id: 'video-character', title: '전신 캐릭터 이미지', sub: '내 사진 첨부' } ] },
       { title: '영상 생성', prompts: [
         { id: 'video-swap', title: '영상 속 인물 바꾸기', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' } ] }
+    ] },
+  { id: 'poster', label: '포스터 제작',
+    note: '다섯 단계를 **같은 채팅방에서 이어서** 진행하세요. 그래야 “위에서 내가 선택한 내용”, “확정한 원고”가 통합니다.',
+    intro: POSTER_INTRO,
+    steps: [
+      { title: '보고서에서 핵심 내용 정리하기',
+        todo: '보고서를 첨부하고, **누구에게 어떤 목적으로** 보여줄지 알려줍니다. AI가 정리한 내용은 원문과 대조해 확인합니다.',
+        prompts: [ { id: 'poster-summary', title: '핵심 내용 3가지 정리', sub: '보고서 첨부' } ],
+        example: POSTER_EX1,
+        check: '내 보고서의 핵심이 맞는가? 포스터를 보는 사람에게 필요한 내용인가?',
+        output: '포스터에 사용할 핵심 내용' },
+      { title: '포스터에 들어갈 원고 확정하기',
+        todo: '앞에서 고른 내용을 **제목·설명·핵심 내용·출처**로 줄입니다. 문장을 직접 읽고, 필요한 부분을 고쳐 최종 문구를 정합니다.',
+        prompts: [ { id: 'poster-script', title: '포스터 원고 만들기' } ],
+        example: POSTER_EX2,
+        check: '줄이는 과정에서 뜻이 달라지지 않았는가? 검토 중인 내용을 확정된 사실처럼 쓰지 않았는가?',
+        checkNote: '예를 들어 ‘안내문 통합을 검토한다’가 ‘통합 안내 서비스를 운영한다’로 바뀌었다면 고쳐야 합니다.',
+        output: '포스터에 그대로 넣을 최종 원고' },
+      { title: '디자인과 배치 정하기',
+        todo: '**무엇을 가장 먼저 보이게 할지**, 글과 그림을 어디에 놓을지 정합니다. 참고할 포스터 이미지가 있으면 이 단계에서 함께 첨부합니다.',
+        prompts: [ { id: 'poster-design', title: '디자인안 받기', sub: '참고 포스터가 있으면 첨부' } ],
+        example: POSTER_EX3,
+        check: '처음 봤을 때 가장 중요한 내용부터 눈에 들어오는가?',
+        output: '색상·강조 지점·배치가 정해진 디자인안' },
+      { title: '포스터 이미지 제작하기',
+        todo: '이미지를 만들 수 있는 도구에 **확정 원고와 디자인안**을 전달합니다. 도구를 바꾸는 경우에는 두 내용을 함께 붙여 넣습니다.',
+        prompts: [ { id: 'poster-image', title: '포스터 이미지 만들기', sub: '이미지 생성 도구에서' } ],
+        example: POSTER_EX4,
+        check: '실제로 사용할 크기로 봤을 때 글자가 읽히는가? 원고가 빠짐없이 들어갔는가?',
+        output: '포스터 이미지 초안' },
+      { title: '원문과 비교하고 수정하기',
+        todo: '완성된 포스터를 **보고서·확정 원고와 나란히 놓고** 확인합니다. AI의 검토 결과를 참고하면서 직접도 읽어 봅니다.',
+        prompts: [
+          { id: 'poster-review', title: '원문과 대조하기', sub: '포스터 이미지 첨부' },
+          { id: 'poster-fix', title: '수정 요청하기' } ],
+        exampleLabel: '최종 확인 항목',
+        example: POSTER_EX5,
+        output: '내용과 표현을 확인한 최종 포스터 한 장' }
     ] }
 ];
 
 const ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>';
 const ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 7.7-1.6"/></svg>';
+const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const PREF_KEY = 'acp-preview';
 
 const app = document.getElementById('app');
@@ -318,9 +526,17 @@ function tabsHTML(){
 function panelHTML(t){
   let h = '<section class="panel" id="' + t.id + '" role="tabpanel" aria-labelledby="tab-' + t.id + '"' + (t.id === curTab ? '' : ' hidden') + '>';
   if (t.note) h += '<p class="note">' + strong(t.note) + '</p>';
+  if (t.intro) h += t.intro;
   t.steps.forEach((s, i) => {
     h += '<div class="step"><div class="step-num">' + (i + 1) + '</div><div class="step-body"><h2>' + esc(s.title) + '</h2>';
+    if (s.todo) h += '<p class="todo"><span class="lbl">할 일</span>' + strong(s.todo) + '</p>';
     s.prompts.forEach(p => { h += promptHTML(p); });
+    if (s.example) h += '<section class="ex"><p class="lbl">' + esc(s.exampleLabel || '결과 예시') + '</p>' + s.example + '</section>';
+    if (s.check){
+      h += '<div class="check"><p class="lbl">' + ICON_CHECK + '확인할 점</p><p>“' + esc(s.check) + '”</p>'
+        + (s.checkNote ? '<p class="check-note">' + esc(s.checkNote) + '</p>' : '') + '</div>';
+    }
+    if (s.output) h += '<p class="output"><span class="lbl">이 단계의 결과물</span>' + esc(s.output) + '</p>';
     h += '</div></div>';
   });
   return h + '</section>';
