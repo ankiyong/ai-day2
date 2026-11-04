@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 콘텐츠 제작 프롬프트</title>
+<meta name="description" content="카드뉴스·영상 제작 프롬프트 모음">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* 레이아웃: 760px 단일 칼럼 · 단계 번호 레일 + 프롬프트 카드 · 강사에게만 하단 고정 관리 바 */
+:root{
+  --bg:#EDF0F5;--paper:#FFFFFF;--ink:#1A2132;--muted:#5B6477;--line:#D5DAE3;
+  --card:#2C55D6;--card-soft:#E3EAFC;--video:#B8306F;--video-soft:#F8E2EC;
+  --fill:#FFF1B8;--fill-ink:#6A5200;
+  --lock:#5D6880;--lock-soft:#E3E7EE;
+  --bar-bg:#1A2132;--bar-ink:#FFFFFF;--bar-muted:#A9B2C4;--bar-line:#3B4660;--bar-alert:#FFCF6E;
+  --shadow:rgba(16,22,38,.18);
+  --accent:var(--card);--accent-soft:var(--card-soft);
+  --font:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121722;--paper:#1B2231;--ink:#E7EBF3;--muted:#9AA3B5;--line:#2E3748;
+    --card:#7D9BFF;--card-soft:#22305A;--video:#F07AAE;--video-soft:#4A2034;
+    --fill:#4A3E10;--fill-ink:#FFE07A;
+    --lock:#8F99AE;--lock-soft:#242B3A;
+    --bar-bg:#283146;--bar-ink:#EEF1F7;--bar-muted:#A3ACBE;--bar-line:#435069;
+    --shadow:rgba(0,0,0,.45);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121722;--paper:#1B2231;--ink:#E7EBF3;--muted:#9AA3B5;--line:#2E3748;
+  --card:#7D9BFF;--card-soft:#22305A;--video:#F07AAE;--video-soft:#4A2034;
+  --fill:#4A3E10;--fill-ink:#FFE07A;
+  --lock:#8F99AE;--lock-soft:#242B3A;
+  --bar-bg:#283146;--bar-ink:#EEF1F7;--bar-muted:#A3ACBE;--bar-line:#435069;
+  --shadow:rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:anywhere;
+}
+body[data-tab="video"]{--accent:var(--video);--accent-soft:var(--video-soft)}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding:48px 20px 80px}
+header h1{font-size:clamp(28px,6vw,40px);line-height:1.2;margin:0 0 8px;font-weight:700;letter-spacing:-0.02em;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+.tabs{display:flex;flex-wrap:wrap;margin:36px 0 32px;border-bottom:2px solid var(--line)}
+.tab{
+  appearance:none;background:none;border:0;cursor:pointer;
+  font:inherit;font-size:18px;font-weight:700;color:var(--muted);
+  padding:12px 4px;margin-right:28px;margin-bottom:-2px;
+  border-bottom:3px solid transparent;
+}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-lock{display:inline-flex;align-items:center;gap:3px;margin-left:8px;font-size:13px;font-weight:500;color:var(--lock);vertical-align:2px}
+.tab-lock svg{width:13px;height:13px}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.note{background:var(--accent-soft);color:var(--ink);padding:12px 16px;border-radius:8px;margin:0 0 32px;font-size:15px}
+
+.step{display:grid;grid-template-columns:44px 1fr;gap:0 16px;margin-bottom:40px}
+.step-body{min-width:0}
+.step-num{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--accent);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:18px;
+}
+.step h2{font-size:22px;margin:6px 0 16px;line-height:1.3;letter-spacing:-0.01em}
+
+.prompt{margin-bottom:20px}
+.prompt-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;margin-bottom:8px}
+.prompt-head h3{font-size:16px;margin:0;font-weight:700;flex:1 1 12em;min-width:0}
+.prompt-head small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+.actions{display:flex;align-items:center;gap:8px;flex:none}
+.copy{
+  flex:none;appearance:none;cursor:pointer;font:inherit;font-size:14px;font-weight:500;
+  background:var(--paper);color:var(--accent);
+  border:1.5px solid var(--accent);border-radius:999px;padding:6px 16px;min-width:76px;
+}
+.copy:hover{background:var(--accent-soft)}
+.copy.done{background:var(--accent);color:var(--paper)}
+.lock{
+  appearance:none;cursor:pointer;font:inherit;font-size:14px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--paper);color:var(--muted);
+  border:1.5px solid var(--line);border-radius:999px;padding:6px 14px 6px 11px;
+}
+.lock:hover{border-color:var(--lock);color:var(--ink)}
+.lock[aria-pressed="true"]{background:var(--lock);border-color:var(--lock);color:var(--paper)}
+.lock svg{width:15px;height:15px;flex:none}
+.lock:disabled{opacity:.55;cursor:default}
+
+pre{
+  margin:0;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:16px 18px;
+  white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:inherit;font-size:15px;line-height:1.75;
+}
+pre[lang="en"]{word-break:normal}
+.prompt.is-locked pre{background:var(--lock-soft);border-left-color:var(--lock);color:var(--muted)}
+.fill{background:var(--fill);color:var(--fill-ink);border-radius:3px;padding:0 3px;font-weight:500}
+.tip{color:var(--muted);font-size:14px;margin:8px 0 0}
+
+.sealed{
+  display:flex;align-items:center;gap:10px;min-height:64px;padding:14px 18px;
+  border:1px dashed var(--lock);border-left:4px solid var(--lock);border-radius:0 8px 8px 0;
+  background:repeating-linear-gradient(135deg,var(--lock-soft) 0 8px,var(--paper) 8px 16px);
+  color:var(--muted);font-size:15px;
+}
+.sealed svg{width:18px;height:18px;flex:none;color:var(--lock)}
+.sealed span{background:var(--paper);border-radius:4px;padding:2px 8px}
+.waiting{
+  min-height:64px;padding:14px 18px;display:flex;align-items:center;
+  border:1px solid var(--line);border-left:4px solid var(--line);border-radius:0 8px 8px 0;
+  background:var(--paper);color:var(--muted);font-size:14px;
+}
+
+footer{
+  color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px;margin-top:16px;
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;
+}
+footer p{margin:0}
+.linkbtn{
+  appearance:none;background:none;border:0;padding:0;cursor:pointer;
+  font:inherit;font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;
+}
+.linkbtn:hover{color:var(--ink)}
+.login-msg{flex-basis:100%;color:var(--ink)}
+
+.adminbar{
+  position:sticky;bottom:0;z-index:5;
+  background:var(--bar-bg);color:var(--bar-ink);
+  box-shadow:0 -8px 28px var(--shadow);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.ab-inner{
+  max-width:760px;margin:0 auto;display:grid;gap:10px;
+  padding-block:12px 14px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));
+  padding-right:max(20px,env(safe-area-inset-right,0px));
+}
+.ab-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.ab-status{flex:1 1 16em;min-width:0;margin:0;font-size:14px;color:var(--bar-muted)}
+.ab-status strong{color:var(--bar-ink);margin-right:10px}
+.ab-btn{
+  appearance:none;cursor:pointer;font:inherit;font-size:14px;font-weight:500;
+  background:transparent;color:var(--bar-ink);
+  border:1px solid var(--bar-line);border-radius:999px;padding:6px 14px;
+}
+.ab-btn:hover{border-color:var(--bar-muted)}
+.ab-btn[aria-pressed="true"]{background:var(--bar-line)}
+.ab-btn:disabled{opacity:.45;cursor:default}
+.ab-quiet{margin-left:auto;color:var(--bar-muted)}
+.adminbar button:focus-visible{outline-color:var(--bar-ink)}
+.ab-msg{margin:0;font-size:13px;color:var(--bar-muted)}
+.ab-msg.is-error{color:var(--bar-alert)}
+
+@media (max-width:520px){
+  .wrap{padding-top:32px}
+  .step{grid-template-columns:1fr}
+  .step-num{width:36px;height:36px;font-size:16px;margin-bottom:8px}
+  .step h2{margin-top:0}
+  .tab{margin-right:20px}
+  .ab-quiet{margin-left:0}
+}
+@media (prefers-reduced-motion:no-preference){
+  .copy,.lock,.ab-btn{transition:background .15s,color .15s,border-color .15s}
+}
+</style>
+</head>
+<body data-tab="card">
+<div id="app"></div>
+<noscript><p style="padding:24px">이 페이지는 자바스크립트가 켜져 있어야 볼 수 있어요.</p></noscript>
+<script type="module">
+/* Firebase: 프롬프트 내용과 잠금 상태는 Firestore의 prompts 컬렉션에만 있다.
+   수강생은 open == true 인 문서만 읽을 수 있고, 강사 계정만 전체를 읽고 바꿀 수 있다(보안 규칙). */
+const FB = 'https://www.gstatic.com/firebasejs/12.19.0/';
+const firebaseConfig = {
+  apiKey: 'AIzaSyCjdc9CWpfSC8qDXe8vQ2HXHtfpFke7ywo',
+  authDomain: 'ai-lecture-9af7f.firebaseapp.com',
+  projectId: 'ai-lecture-9af7f',
+  storageBucket: 'ai-lecture-9af7f.firebasestorage.app',
+  messagingSenderId: '334444578107',
+  appId: '1:334444578107:web:61ebddc2c4ce1f6b29231e'
+};
+
+/* 화면 구조(제목만). 프롬프트 글은 여기에 없다. */
+const FOOTER = 'AI로 만든 콘텐츠를 올릴 때는 AI 활용 사실을 함께 표기하세요.';
+const TABS = [
+  { id: 'card', label: '카드뉴스 제작',
+    note: '처음부터 끝까지 **같은 채팅방에서 이어서** 진행하세요. 그래야 “위 자료”, “위에서 정한”이 통합니다.',
+    steps: [
+      { title: '주제 정하기', prompts: [
+        { id: 'card-topic', title: '주제 후보 받기' },
+        { id: 'card-narrow', title: '주제 좁히기', sub: '선택' } ] },
+      { title: '자료 서치 및 사용자 결정', prompts: [
+        { id: 'card-research', title: '자료 찾기', sub: '웹 검색 켜기' },
+        { id: 'card-script', title: '원고 쓰기' },
+        { id: 'card-verify', title: '검증하기' } ] },
+      { title: '디자인', prompts: [
+        { id: 'card-style', title: '레퍼런스 분석 + 스타일 가이드', sub: '캡처 이미지 첨부' } ] },
+      { title: '제작', prompts: [
+        { id: 'card-make', title: '카드뉴스 만들기' },
+        { id: 'card-shorten', title: '수정: 글자 줄이기' },
+        { id: 'card-cover', title: '수정: 표지 강조' },
+        { id: 'card-hangul', title: '수정: 한글이 깨질 때' },
+        { id: 'card-caption', title: '캡션과 해시태그' } ] }
+    ] },
+  { id: 'video', label: '영상 제작',
+    note: '힉스필드에서 사용하는 프롬프트입니다. 1단계에서 만든 캐릭터 이미지를 2단계 영상 생성에 사용합니다.',
+    steps: [
+      { title: '캐릭터 생성', prompts: [
+        { id: 'video-character', title: '전신 캐릭터 이미지', sub: '내 사진 첨부' } ] },
+      { title: '영상 생성', prompts: [
+        { id: 'video-swap', title: '영상 속 인물 바꾸기', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' } ] }
+    ] }
+];
+
+const ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>';
+const ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 7.7-1.6"/></svg>';
+const PREF_KEY = 'acp-preview';
+
+const app = document.getElementById('app');
+const live = document.createElement('p');
+live.className = 'sr'; live.setAttribute('role', 'status');
+document.body.appendChild(live);
+
+let curTab = hashTab();
+let fs = null, au = null, db = null, auth = null;
+let openMap = {};            // 수강생: 공개된 프롬프트 id -> {text, tip}
+let allDocs = null;          // 강사: 모든 프롬프트 id -> {text, tip, open}
+let loadState = 'loading';   // loading | slow | ready | error
+let isAdmin = false, adminEmail = '', preview = false;
+let unsubStudent = null, unsubAdmin = null, slowTimer = null;
+const inflight = new Set();
+let msg = '', msgErr = false, loginMsg = '';
+
+/* ---------- 도우미 ---------- */
+function eachIn(tab, fn){ tab.steps.forEach(s => s.prompts.forEach(fn)); }
+function eachPrompt(fn){ TABS.forEach(t => eachIn(t, fn)); }
+function tabById(id){ return TABS.find(t => t.id === id) || null; }
+function hashTab(){ const h = (location.hash || '').slice(1); return tabById(h) ? h : TABS[0].id; }
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function fills(s){ return esc(s).replace(/\[[^\]\n]+\]/g, m => '<span class="fill">' + m + '</span>'); }
+function strong(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
+function isOpen(id){ return isAdmin ? !!(allDocs && allDocs[id] && allDocs[id].open) : !!openMap[id]; }
+function contentOf(id){
+  if (isAdmin){ const d = allDocs && allDocs[id]; return d ? { text: d.text, tip: d.tip } : null; }
+  return openMap[id] || null;
+}
+function setMsg(text, err){ msg = text; msgErr = !!err; if (text) live.textContent = text; }
+function setLogin(text){ loginMsg = text; if (text) live.textContent = text; render(); }
+function waitingText(){
+  if (loadState === 'error') return '프롬프트를 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.';
+  if (loadState === 'slow') return '불러오는 데 시간이 걸리고 있어요. 잠시만 기다려 주세요.';
+  return '프롬프트를 불러오는 중…';
+}
+
+/* ---------- 그리기 ---------- */
+function promptHTML(p){
+  const admin = isAdmin && !preview;
+  const ready = loadState === 'ready';
+  const locked = !isOpen(p.id);
+  const c = (!ready || (locked && !admin)) ? null : contentOf(p.id);
+  let h = '<div class="prompt' + (ready && locked ? ' is-locked' : '') + '">';
+  h += '<div class="prompt-head"><h3>' + esc(p.title) + (p.sub ? '<small>' + esc(p.sub) + '</small>' : '') + '</h3><div class="actions">';
+  if (admin && ready && allDocs && allDocs[p.id]){
+    h += '<button class="lock" type="button" data-act="toggle" data-id="' + p.id + '"'
+      + ' aria-pressed="' + locked + '" aria-label="“' + esc(p.title) + '” 잠금"'
+      + ' title="' + (locked ? '눌러서 수강생에게 공개' : '눌러서 수강생에게 숨기기') + '"'
+      + (inflight.has(p.id) ? ' disabled' : '') + '>'
+      + (locked ? ICON_LOCK + '잠김' : ICON_OPEN + '공개') + '</button>';
+  }
+  if (c) h += '<button class="copy" type="button" data-act="copy" data-id="' + p.id + '">복사</button>';
+  h += '</div></div>';
+  if (!ready){
+    h += '<div class="waiting">' + esc(waitingText()) + '</div>';
+  } else if (locked && !admin){
+    h += '<div class="sealed">' + ICON_LOCK + '<span>강사가 공개하면 여기에 나타나요</span></div>';
+  } else if (!c){
+    h += '<div class="waiting">Firebase에 이 프롬프트가 없어요.</div>';
+  } else {
+    h += '<pre' + (p.lang ? ' lang="' + p.lang + '"' : '') + ' data-pre="' + p.id + '">' + fills(c.text) + '</pre>';
+    if (c.tip) h += '<p class="tip">' + esc(c.tip) + '</p>';
+  }
+  return h + '</div>';
+}
+
+function tabsHTML(){
+  return '<div class="tabs" role="tablist" aria-label="제작 종류">' + TABS.map(t => {
+    const on = t.id === curTab;
+    let n = 0;
+    if (isAdmin && !preview && loadState === 'ready') eachIn(t, p => { if (!isOpen(p.id)) n++; });
+    return '<button class="tab" type="button" role="tab" id="tab-' + t.id + '" aria-controls="' + t.id + '"'
+      + ' aria-selected="' + on + '" tabindex="' + (on ? 0 : -1) + '" data-act="tab" data-tab="' + t.id + '">'
+      + esc(t.label)
+      + (n ? '<span class="tab-lock">' + ICON_LOCK + '<span class="sr">잠김 </span>' + n + '</span>' : '')
+      + '</button>';
+  }).join('') + '</div>';
+}
+
+function panelHTML(t){
+  let h = '<section class="panel" id="' + t.id + '" role="tabpanel" aria-labelledby="tab-' + t.id + '"' + (t.id === curTab ? '' : ' hidden') + '>';
+  if (t.note) h += '<p class="note">' + strong(t.note) + '</p>';
+  t.steps.forEach((s, i) => {
+    h += '<div class="step"><div class="step-num">' + (i + 1) + '</div><div class="step-body"><h2>' + esc(s.title) + '</h2>';
+    s.prompts.forEach(p => { h += promptHTML(p); });
+    h += '</div></div>';
+  });
+  return h + '</section>';
+}
+
+function barHTML(){
+  if (!isAdmin) return '';
+  let total = 0, openN = 0;
+  eachPrompt(p => { total++; if (isOpen(p.id)) openN++; });
+  const tab = tabById(curTab);
+  const off = preview ? ' disabled' : '';
+  let h = '<div class="adminbar" role="region" aria-label="강사 관리"><div class="ab-inner"><div class="ab-row"><p class="ab-status">';
+  h += preview
+    ? '<strong>수강생 화면 미리보기</strong>수강생에게 지금 이렇게 보여요.'
+    : '<strong>강사 모드</strong>공개 ' + openN + ' · 잠김 ' + (total - openN) + ' · 누르는 즉시 수강생 화면에 반영돼요.';
+  h += '</p></div><div class="ab-row">';
+  h += '<button class="ab-btn" type="button" data-act="lock-tab"' + off + '>' + esc(tab.label) + ' 전체 잠금</button>';
+  h += '<button class="ab-btn" type="button" data-act="unlock-tab"' + off + '>' + esc(tab.label) + ' 전체 공개</button>';
+  h += '<button class="ab-btn" type="button" data-act="preview" aria-pressed="' + preview + '">수강생 화면 미리보기</button>';
+  h += '<button class="ab-btn ab-quiet" type="button" data-act="logout" title="' + esc(adminEmail) + '">로그아웃</button>';
+  h += '</div>';
+  if (msg) h += '<p class="ab-msg' + (msgErr ? ' is-error' : '') + '">' + esc(msg) + '</p>';
+  return h + '</div></div>';
+}
+
+function render(){
+  const a = document.activeElement;
+  let key = null;
+  if (a && app.contains(a) && a.dataset && a.dataset.act) key = { act: a.dataset.act, id: a.dataset.id || '', tab: a.dataset.tab || '' };
+  document.body.setAttribute('data-tab', curTab);
+  app.innerHTML = '<div class="wrap"><header><h1>AI 콘텐츠 제작 프롬프트</h1>'
+    + '<p>필요한 프롬프트를 복사해서 쓰세요. <span class="fill">노란 칸</span>은 직접 바꿔 넣는 부분입니다.</p></header>'
+    + tabsHTML() + TABS.map(panelHTML).join('')
+    + '<footer><p>' + esc(FOOTER) + '</p>'
+    + (isAdmin ? '' : '<button class="linkbtn" type="button" data-act="login">강사 로그인</button>')
+    + (loginMsg ? '<p class="login-msg">' + esc(loginMsg) + '</p>' : '')
+    + '</footer></div>' + barHTML();
+  if (key){
+    const sel = '[data-act="' + key.act + '"]' + (key.id ? '[data-id="' + key.id + '"]' : '') + (key.tab ? '[data-tab="' + key.tab + '"]' : '');
+    const el = app.querySelector(sel);
+    if (el && !el.disabled) el.focus({ preventScroll: true });
+  }
+}
+
+/* ---------- 동작 ---------- */
+function setTab(id, push){
+  curTab = tabById(id) ? id : TABS[0].id;
+  if (push){ try { history.replaceState(null, '', '#' + curTab); } catch (_){ } }
+  render();
+}
+
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', '');
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (_){ }
+  document.body.removeChild(ta); return ok;
+}
+function copy(btn, id){
+  const c = contentOf(id);
+  if (!c) return;
+  const done = ok => {
+    btn.textContent = ok ? '복사됨' : '복사 실패';
+    btn.classList.toggle('done', ok);
+    if (!ok){
+      const pre = app.querySelector('[data-pre="' + id + '"]');
+      if (pre){ try { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (_){ } }
+    }
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('done'); }, 1600);
+  };
+  if (navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(c.text).then(() => done(true), () => done(fallbackCopy(c.text)));
+  } else { done(fallbackCopy(c.text)); }
+}
+
+async function setOpen(ids, value){
+  ids = ids.filter(id => allDocs && allDocs[id] && allDocs[id].open !== value && !inflight.has(id));
+  if (!ids.length) return;
+  ids.forEach(id => inflight.add(id));
+  setMsg(''); render();
+  try {
+    if (ids.length === 1){
+      await fs.updateDoc(fs.doc(db, 'prompts', ids[0]), { open: value });
+    } else {
+      const b = fs.writeBatch(db);
+      ids.forEach(id => b.update(fs.doc(db, 'prompts', id), { open: value }));
+      await b.commit();
+    }
+  } catch (_){
+    setMsg(value ? '공개하지 못했어요. 잠시 후 다시 눌러 주세요.' : '잠그지 못했어요. 잠시 후 다시 눌러 주세요.', true);
+  } finally {
+    ids.forEach(id => inflight.delete(id));
+    render();
+  }
+}
+
+async function signIn(){
+  if (!au){ setLogin('아직 준비 중이에요. 잠시 후 다시 눌러 주세요.'); return; }
+  const pending = au.signInWithPopup(auth, new au.GoogleAuthProvider());
+  setLogin('');
+  try { await pending; }
+  catch (e){
+    const c = (e && e.code) || '';
+    if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+    if (c === 'auth/popup-blocked') setLogin('팝업이 차단됐어요. 브라우저에서 팝업을 허용한 뒤 다시 눌러 주세요.');
+    else if (c === 'auth/unauthorized-domain') setLogin('이 주소(' + location.hostname + ')가 Firebase 승인된 도메인에 없어요. Firebase 콘솔에서 추가해 주세요.');
+    else if (c === 'auth/operation-not-allowed') setLogin('Firebase에서 Google 로그인이 꺼져 있어요. Authentication에서 켜 주세요.');
+    else setLogin('로그인하지 못했어요. 일반 브라우저(크롬, 사파리)에서 다시 시도해 주세요. (' + c + ')');
+  }
+}
+
+app.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b || b.disabled) return;
+  const act = b.dataset.act;
+  if (act === 'tab') setTab(b.dataset.tab, true);
+  else if (act === 'copy') copy(b, b.dataset.id);
+  else if (act === 'login') signIn();
+  else if (!isAdmin) return;
+  else if (act === 'toggle') setOpen([b.dataset.id], !isOpen(b.dataset.id));
+  else if (act === 'lock-tab' || act === 'unlock-tab'){
+    const ids = []; eachIn(tabById(curTab), p => ids.push(p.id));
+    setOpen(ids, act === 'unlock-tab');
+  }
+  else if (act === 'preview'){
+    preview = !preview;
+    try { sessionStorage.setItem(PREF_KEY, preview ? '1' : ''); } catch (_){ }
+    render();
+  }
+  else if (act === 'logout') au.signOut(auth).catch(() => {});
+});
+
+app.addEventListener('keydown', e => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const b = e.target.closest('[data-act="tab"]');
+  if (!b) return;
+  const ids = TABS.map(t => t.id);
+  const i = ids.indexOf(b.dataset.tab);
+  const n = ids[(i + (e.key === 'ArrowRight' ? 1 : -1) + ids.length) % ids.length];
+  e.preventDefault();
+  setTab(n, true);
+  const el = app.querySelector('[data-act="tab"][data-tab="' + n + '"]');
+  if (el) el.focus();
+});
+window.addEventListener('hashchange', () => setTab(hashTab(), false));
+
+/* ---------- Firebase 연결 ---------- */
+function startSlowTimer(){
+  clearTimeout(slowTimer);
+  slowTimer = setTimeout(() => { if (loadState === 'loading'){ loadState = 'slow'; render(); } }, 10000);
+}
+
+function subscribeStudent(){
+  if (unsubStudent) return;
+  let gotServer = false;
+  loadState = 'loading'; startSlowTimer();
+  const q = fs.query(fs.collection(db, 'prompts'), fs.where('open', '==', true));
+  unsubStudent = fs.onSnapshot(q, snap => {
+    if (snap.metadata.fromCache && !gotServer){
+      if (loadState === 'loading'){ loadState = 'slow'; render(); }
+      return;
+    }
+    gotServer = true; clearTimeout(slowTimer);
+    const m = {};
+    snap.forEach(d => { const v = d.data(); m[d.id] = { text: String(v.text || ''), tip: String(v.tip || '') }; });
+    openMap = m;
+    if (!isAdmin) loadState = 'ready';
+    render();
+  }, () => {
+    unsubStudent = null; clearTimeout(slowTimer);
+    if (!isAdmin){ loadState = 'error'; render(); }
+  });
+}
+
+function tryAdmin(user){
+  if (unsubAdmin) return;
+  let first = true;
+  unsubAdmin = fs.onSnapshot(fs.collection(db, 'prompts'), snap => {
+    if (first && snap.metadata.fromCache) return;
+    const m = {};
+    snap.forEach(d => { const v = d.data(); m[d.id] = { text: String(v.text || ''), tip: String(v.tip || ''), open: v.open === true }; });
+    allDocs = m;
+    if (first){
+      first = false;
+      isAdmin = true; adminEmail = user.email || ''; loginMsg = '';
+      try { preview = sessionStorage.getItem(PREF_KEY) === '1'; } catch (_){ preview = false; }
+      if (unsubStudent){ unsubStudent(); unsubStudent = null; }
+      clearTimeout(slowTimer);
+    }
+    loadState = 'ready';
+    render();
+  }, () => {
+    unsubAdmin = null;
+    if (isAdmin){
+      leaveAdmin();
+      setLogin('강사 권한을 확인하지 못해 수강생 화면으로 돌아왔어요.');
+    } else {
+      setLogin((user.email || '이 계정') + '은(는) 강사 계정이 아니에요. 강사 계정으로 로그인해 주세요.');
+      au.signOut(auth).catch(() => {});
+    }
+  });
+}
+
+function leaveAdmin(){
+  if (unsubAdmin){ unsubAdmin(); unsubAdmin = null; }
+  const was = isAdmin;
+  isAdmin = false; allDocs = null; adminEmail = ''; preview = false; setMsg('');
+  if (!unsubStudent) subscribeStudent();
+  if (was) render();
+}
+
+async function boot(){
+  render();
+  try {
+    const [appM, authM, fsM] = await Promise.all([
+      import(FB + 'firebase-app.js'), import(FB + 'firebase-auth.js'), import(FB + 'firebase-firestore.js')
+    ]);
+    au = authM; fs = fsM;
+    const fbApp = appM.initializeApp(firebaseConfig);
+    db = fs.getFirestore(fbApp);
+    auth = au.getAuth(fbApp);
+  } catch (_){
+    loadState = 'error'; render(); return;
+  }
+  subscribeStudent();
+  au.onAuthStateChanged(auth, user => { if (user) tryAdmin(user); else leaveAdmin(); });
+}
+boot();
+</script>
+</body>
+</html>
