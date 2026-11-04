@@ -262,7 +262,9 @@ footer p{margin:0}
   .step{grid-template-columns:1fr}
   .step-num{width:36px;height:36px;font-size:16px;margin-bottom:8px}
   .step h2{margin-top:0}
-  .tab{margin-right:20px}
+  .tab{margin-right:14px;font-size:16px}
+  .tab:last-child{margin-right:0}
+  .tab-lock{margin-left:4px}
   .ab-quiet{margin-left:0}
 }
 @media (prefers-reduced-motion:no-preference){
@@ -270,7 +272,7 @@ footer p{margin:0}
 }
 </style>
 </head>
-<body data-tab="card">
+<body data-tab="poster">
 <div id="app"></div>
 <noscript><p style="padding:24px">이 페이지는 자바스크립트가 켜져 있어야 볼 수 있어요.</p></noscript>
 <script type="module">
@@ -389,34 +391,18 @@ const POSTER_EX5 = `
   </tbody>
 </table></div>
 <p class="ex-cap">수정한 이미지도 같은 기준으로 확인한 뒤 저장합니다.</p>`;
+const VIDEO_DOWNLOAD = `
+<a class="dl" href="https://drive.google.com/drive/folders/1YF2fvKtJ3QV8VulcRMPUnOr_PxoD42eg?usp=sharing" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></svg>
+  <span class="dl-text">
+    <span class="dl-main">실습용 영상 내려받기</span>
+    <span class="dl-sub">Google 드라이브 폴더 · 새 창에서 열려요</span>
+  </span>
+  <span class="dl-go">열기</span>
+</a>
+<p class="tip">폴더에서 쓸 영상을 고른 뒤 다운로드를 누르면 내 기기에 저장됩니다.</p>`;
+
 const TABS = [
-  { id: 'card', label: '카드뉴스 제작',
-    note: '처음부터 끝까지 **같은 채팅방에서 이어서** 진행하세요. 그래야 “위 자료”, “위에서 정한”이 통합니다.',
-    steps: [
-      { title: '주제 정하기', prompts: [
-        { id: 'card-topic', title: '주제 후보 받기' },
-        { id: 'card-narrow', title: '주제 좁히기', sub: '선택' } ] },
-      { title: '자료 서치 및 사용자 결정', prompts: [
-        { id: 'card-research', title: '자료 찾기', sub: '웹 검색 켜기' },
-        { id: 'card-script', title: '원고 쓰기' },
-        { id: 'card-verify', title: '검증하기' } ] },
-      { title: '디자인', prompts: [
-        { id: 'card-style', title: '레퍼런스 분석 + 스타일 가이드', sub: '캡처 이미지 첨부' } ] },
-      { title: '제작', prompts: [
-        { id: 'card-make', title: '카드뉴스 만들기' },
-        { id: 'card-shorten', title: '수정: 글자 줄이기' },
-        { id: 'card-cover', title: '수정: 표지 강조' },
-        { id: 'card-hangul', title: '수정: 한글이 깨질 때' },
-        { id: 'card-caption', title: '캡션과 해시태그' } ] }
-    ] },
-  { id: 'video', label: '영상 제작',
-    note: '힉스필드에서 사용하는 프롬프트입니다. 1단계에서 만든 캐릭터 이미지를 2단계 영상 생성에 사용합니다.',
-    steps: [
-      { title: '캐릭터 생성', prompts: [
-        { id: 'video-character', title: '전신 캐릭터 이미지', sub: '내 사진 첨부' } ] },
-      { title: '영상 생성', prompts: [
-        { id: 'video-swap', title: '영상 속 인물 바꾸기', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' } ] }
-    ] },
   { id: 'poster', label: '포스터 제작',
     note: '다섯 단계를 **같은 채팅방에서 이어서** 진행하세요. 그래야 “위에서 내가 선택한 내용”, “확정한 원고”가 통합니다.',
     intro: POSTER_INTRO,
@@ -454,6 +440,34 @@ const TABS = [
         exampleLabel: '최종 확인 항목',
         example: POSTER_EX5,
         output: '내용과 표현을 확인한 최종 포스터 한 장' }
+    ] },
+  { id: 'card', label: '카드뉴스 제작',
+    note: '처음부터 끝까지 **같은 채팅방에서 이어서** 진행하세요. 그래야 “위 자료”, “위에서 정한”이 통합니다.',
+    steps: [
+      { title: '주제 정하기', prompts: [
+        { id: 'card-topic', title: '주제 후보 받기' },
+        { id: 'card-narrow', title: '주제 좁히기', sub: '선택' } ] },
+      { title: '자료 서치 및 사용자 결정', prompts: [
+        { id: 'card-research', title: '자료 찾기', sub: '웹 검색 켜기' },
+        { id: 'card-script', title: '원고 쓰기' },
+        { id: 'card-verify', title: '검증하기' } ] },
+      { title: '디자인', prompts: [
+        { id: 'card-style', title: '레퍼런스 분석 + 스타일 가이드', sub: '캡처 이미지 첨부' } ] },
+      { title: '제작', prompts: [
+        { id: 'card-make', title: '카드뉴스 만들기' },
+        { id: 'card-shorten', title: '수정: 글자 줄이기' },
+        { id: 'card-cover', title: '수정: 표지 강조' },
+        { id: 'card-hangul', title: '수정: 한글이 깨질 때' },
+        { id: 'card-caption', title: '캡션과 해시태그' } ] }
+    ] },
+  { id: 'video', label: '영상 제작',
+    note: '힉스필드에서 사용하는 프롬프트입니다. 1단계에서 받은 원본 영상과 2단계에서 만든 캐릭터 이미지를 3단계 영상 생성에 사용합니다.',
+    steps: [
+      { title: '원본 영상 받기', prompts: [], block: VIDEO_DOWNLOAD },
+      { title: '캐릭터 생성', prompts: [
+        { id: 'video-character', title: '전신 캐릭터 이미지', sub: '내 사진 첨부' } ] },
+      { title: '영상 생성', prompts: [
+        { id: 'video-swap', title: '영상 속 인물 바꾸기', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' } ] }
     ] }
 ];
 
@@ -550,6 +564,7 @@ function panelHTML(t){
   t.steps.forEach((s, i) => {
     h += '<div class="step"><div class="step-num">' + (i + 1) + '</div><div class="step-body"><h2>' + esc(s.title) + '</h2>';
     if (s.todo) h += '<p class="todo"><span class="lbl">할 일</span>' + strong(s.todo) + '</p>';
+    if (s.block) h += s.block;
     s.prompts.forEach(p => { h += promptHTML(p); });
     if (s.example) h += '<section class="ex"><p class="lbl">' + esc(s.exampleLabel || '결과 예시') + '</p>' + s.example + '</section>';
     if (s.check){
