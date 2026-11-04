@@ -466,8 +466,12 @@ const TABS = [
       { title: '원본 영상 받기', prompts: [], block: VIDEO_DOWNLOAD },
       { title: '캐릭터 생성', prompts: [
         { id: 'video-character', title: '전신 캐릭터 이미지', sub: '내 사진 첨부' } ] },
-      { title: '영상 생성', prompts: [
-        { id: 'video-swap', title: '영상 속 인물 바꾸기', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' } ] }
+      { title: '영상 생성',
+        todo: '사용할 영상에 맞는 프롬프트를 골라 복사하세요.',
+        prompts: [
+        { id: 'video-swap', title: 'Neon', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' },
+        { id: 'video-quit', title: '퇴사할게여', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' },
+        { id: 'video-storm', title: 'Storm', sub: '캐릭터 이미지 + 원본 영상 첨부', lang: 'en' } ] }
     ] }
 ];
 
